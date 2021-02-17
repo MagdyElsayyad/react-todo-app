@@ -1,26 +1,19 @@
 import React, { Component, Fragment } from "react";
 import { Button, Table } from "react-bootstrap";
-import { BrowserRouter, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 export default class HomeComponent extends Component {
   state = {
     allTasks : [
       {
-        id: 0,
-        title: "hfghfh",
-        done: false,
-        date: "2021-02-10T22:00:00.000Z",
-        desc: "fdsfsfsdfsf",
-      },
-      {
         id: 1,
-        title: "gghjgjhg",
+        title: "not",
         done: false,
         date: "2021-02-10T22:00:00.000Z",
         desc: "fdsfsfsdfsf",
       },
       {
         id: 2,
-        title: "hghgfhh",
+        title: "done",
         done: true,
         date: "2021-02-10T22:00:00.000Z",
         desc: "fdsfsfsdfsf",
@@ -51,15 +44,20 @@ export default class HomeComponent extends Component {
     task.id = Math.floor(Math.random() * 1000);
     this.setState({
       allTasks : this.state.allTasks.push(task)
+    }, () => {
+      localStorage.setItem('tasks', JSON.stringify(this.state.allTasks));
     })
     
-    localStorage.setItem('tasks', JSON.stringify(this.state.allTasks));
 }
 deleteTask = (id) => {
     this.setState({
       allTasks : this.state.allTasks.filter(task => task.id !== id)
+    }, () => {
+      console.log(this.state.allTasks)
+      localStorage.setItem('tasks', JSON.stringify(this.state.allTasks));
+
     });
-    localStorage.setItem('tasks', JSON.stringify(this.state.allTasks));
+
 }
 
 editTask = (id, task) => {
@@ -67,8 +65,9 @@ editTask = (id, task) => {
   const newTasks = this.state.allTasks[index] = task;
   this.setState({
     allTasks : newTasks
+  }, () => {
+    localStorage.setItem('tasks', JSON.stringify(this.state.allTasks));
   })
-  localStorage.setItem('tasks', JSON.stringify(this.state.allTasks));
 }
   
   render() {

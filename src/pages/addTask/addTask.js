@@ -13,7 +13,6 @@ export default class AddTask extends Component {
   };
 
   componentDidMount(){
-    console.log(this.props)
     const currentTask =  this.tasks.allTasks().filter(task => task.id === Number.parseInt(this.props.match.params.id))[0]
     if(currentTask){
       const date = new Date(currentTask.date)
