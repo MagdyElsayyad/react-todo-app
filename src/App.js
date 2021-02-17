@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import { Fragment } from 'react';
+import HomeComponent from './pages/home/home';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import AddTask from './pages/addTask/addTask';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+
+      <div>
+        <h1 className="my-4 text-center">React ToDo list</h1>
+      </div>
+     <BrowserRouter>
+       <Switch>
+          <Route path="/" exact component={HomeComponent} />
+          <Route path="/tasks"  component={HomeComponent} />
+          <Route path="/task/:id"  component={AddTask} />
+          <Route path="/task"  component={AddTask} />
+       </Switch>
+     </BrowserRouter>
+    
+    </Fragment>
   );
 }
 
