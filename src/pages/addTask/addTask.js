@@ -1,30 +1,61 @@
 import React, { Component } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import HomeComponent from "../home/home";
 export default class AddTask extends Component {
-  tasks = new HomeComponent();
+  allTasks = [];
+  constructor(){
+    super();
+  }
   state = {
-      id: "",
-      desc: "",
-      title: "",
-      date: "",
-      done : false
+    id: "",
+    desc: "",
+    title: "",
+    date: "",
+    done : false
+  };
+  
+  componentDidMount(){
+    let tasks = [];
+    if(localStorage.getItem('tasks')){
+      tasks = this.allTasks = JSON.parse(localStorage.getItem('tasks'));
+      const currentTask = this.props.match.params? tasks.filter(task => task.id === Number.parseInt(this.props.match.params.id))[0] : null
+      if(currentTask){
+        const date = new Date(currentTask.date)
+        this.setState({
+          id: currentTask.id,
+          desc: currentTask.desc,
+          title: currentTask.title,
+          date: date,
+          done: currentTask.done
+        })
+      }
+    }
+    
+  }
+
+
+  editTask = () => {
+    const index = this.allTasks.findIndex((t) => t.id.toString() === this.props.match.params.id);
+    console.log(this.state, index);
+    this.allTasks[index] = this.state;
+    localStorage.setItem("tasks", JSON.stringify(this.allTasks))
+    this.props.history.push('/')
+
   };
 
-  componentDidMount(){
-    const currentTask =  this.tasks.allTasks().filter(task => task.id === Number.parseInt(this.props.match.params.id))[0]
-    if(currentTask){
-      const date = new Date(currentTask.date)
-      this.setState({
-        id: currentTask.id,
-        desc: currentTask.desc,
-        title: currentTask.title,
-        date: date,
-        done: currentTask.done
-      })
+  addTask = () => {
+    const obj = {
+      id : Math.floor(Math.random() * 1000),
+      desc: this.state.desc ,
+      title: this.state.title,
+      date: this.state.date,
+      done : false
     }
-  }
+  
+    this.allTasks.push(obj);
+    localStorage.setItem("tasks", JSON.stringify(this.allTasks))
+    this.props.history.push('/')
+  };
 
   handleChange = (e) => {
     this.setState({
@@ -42,25 +73,11 @@ export default class AddTask extends Component {
       console.log(this.state)
   }
 
-addTask = () => {
-  if(this.state.title && this.state.date){
-    this.tasks.addTask(this.state)
-    this.props.history.push('/')
-  }
-}
-editTask = () => {
-  if(this.state.title && this.state.date){
- 
-    this.tasks.editTask(Number.parseInt(this.props.match.params.id), this.state);
-    this.props.history.push('/')
-  }
-}
 
   render() {
     const submitBTN = this.props.match.params.id === undefined? 
     <button className="btn btn-primary m-2" onClick={() => this.addTask()}>Add Task</button>:
     <button className="btn btn-primary m-2" onClick={() => this.editTask()}>Edit Task</button>
-
 
     return (
       <div>
@@ -85,7 +102,7 @@ editTask = () => {
             />
           </div>
 {submitBTN}   
-<button type="button" className="btn btn-dark m-2" onClick={() => this.props.history.push('/')}>Cancel</button>
+<button type="button" className="btn btn-dark m-2" onClick={() => this.props.history.push('/')}>Back Home</button>
 </form>
       </div>
     );
